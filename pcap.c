@@ -55,7 +55,7 @@ void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *pa
     struct ipheader *ip = (struct ipheader *)(packet + sizeof(struct ethheader));
     
     if (ip->ip_p == IPPROTO_TCP) {
-        struct tcpheader *tcp = (struct tcpheader *)(packet + sizeof(struct ethheader) + (ip->ip_hl * 4));
+        struct tcpheader *tcp = (struct tcpheader *)(packet + sizeof(struct ethheader) + (ip->iph_ihl * 4));
         
         printf("Ethernet: Src MAC: %02x:%02x:%02x:%02x:%02x:%02x\n",
                eth->ether_shost[0], eth->ether_shost[1], eth->ether_shost[2],
@@ -64,14 +64,14 @@ void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *pa
                eth->ether_dhost[0], eth->ether_dhost[1], eth->ether_dhost[2],
                eth->ether_dhost[3], eth->ether_dhost[4], eth->ether_dhost[5]);
 
-        printf("IP: Src: %s\n", inet_ntoa(ip->ip_src));
-        printf("IP: Dst: %s\n", inet_ntoa(ip->ip_dst));
+        printf("IP: Src: %s\n", inet_ntoa(ip->iph_sourceip));
+        printf("IP: Dst: %s\n", inet_ntoa(ip->iph_destip));
 
-        printf("TCP: Src Port: %d\n", ntohs(tcp->th_sport));
-        printf("TCP: Dst Port: %d\n", ntohs(tcp->th_dport));
+        printf("TCP: Src Port: %d\n", ntohs(tcp->tcp_sport));
+        printf("TCP: Dst Port: %d\n", ntohs(tcp->tcp_dport));
 
-        int ip_header_len = ip->ip_hl * 4;
-        int tcp_header_len = tcp->th_off * 4;
+        int ip_header_len = ip->iph_ihl * 4;
+        int tcp_header_len = TH_OFF(tcp) * 4;
         const u_char *payload = packet + sizeof(struct ethheader) + ip_header_len + tcp_header_len;
         int payload_len = header->caplen - (sizeof(struct ethheader) + ip_header_len + tcp_header_len);
 
