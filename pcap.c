@@ -89,7 +89,7 @@ int main() {
   char errbuf[PCAP_ERRBUF_SIZE];
   
   // 1. pcap_open_live 함수로 NIC 열기
-  handle = pcap_open_live("enp0s0", BUFSIZ, 1, 1000, errbuf);
+  handle = pcap_open_live("enp0s3", BUFSIZ, 1, 1000, errbuf);
   if (handle == NULL) {
 	  fprintf(stderr, "Error!:%s\n", errbuf);
 	  return 1;
