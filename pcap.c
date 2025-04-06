@@ -75,10 +75,9 @@ void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *pa
         int payload_len = header->caplen - (sizeof(struct ethheader) + ip_header_len + tcp_header_len);
 
         printf("Message: ");
-        printf("Payload (hex): ");
-    for (int i = 0; i < payload_len && i < 32; i++) {
-        printf("%02x ", payload[i]);
-    }
+        for (int i = 0; i < payload_len && i < 512; i++) {
+            putchar(payload[i]);
+        }
         printf("\n");
     }
 } 
