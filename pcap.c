@@ -54,7 +54,7 @@ void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *pa
     struct ethheader *eth = (struct ethheader *)packet;
     struct ipheader *ip = (struct ipheader *)(packet + sizeof(struct ethheader));
     
-    if (ip->ip_p == IPPROTO_TCP) {
+    if (ip->iph_protocol == IPPROTO_TCP) {
         struct tcpheader *tcp = (struct tcpheader *)(packet + sizeof(struct ethheader) + (ip->iph_ihl * 4));
         
         printf("Ethernet: Src MAC: %02x:%02x:%02x:%02x:%02x:%02x\n",
