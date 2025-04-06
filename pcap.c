@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <pcap.h>
 #include <arpa/inet.h>
-#include <ctype.h>
 
 /* Ethernet header */
 struct ethheader {
@@ -76,10 +75,10 @@ void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *pa
         int payload_len = header->caplen - (sizeof(struct ethheader) + ip_header_len + tcp_header_len);
 
         printf("Message: ");
-        for (int i = 0; i < payload_len && i < 32; i++) {
-            if (isprint(payload[i])) putchar(payload[i]);
-            else putchar('.');
-        }
+        printf("Payload (hex): ");
+    for (int i = 0; i < payload_len && i < 32; i++) {
+        printf("%02x ", payload[i]);
+    }
         printf("\n");
     }
 } 
