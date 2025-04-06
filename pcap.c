@@ -51,11 +51,11 @@ struct tcpheader {
 };
 
 void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet) {
-    struct ether_header *eth = (struct ether_header *)packet;
-    struct ip *ip = (struct ip *)(packet + sizeof(struct ether_header));
+    struct ethheader *eth = (struct ethheader *)packet;
+    struct ipheader *ip = (struct ipheader *)(packet + sizeof(struct ethheader));
     
     if (ip->ip_p == IPPROTO_TCP) {
-        struct tcphdr *tcp = (struct tcphdr *)(packet + sizeof(struct ether_header) + (ip->ip_hl * 4));
+        struct tcpheader *tcp = (struct tcpheader *)(packet + sizeof(struct ethheader) + (ip->ip_hl * 4));
         
         printf("Ethernet: Src MAC: %02x:%02x:%02x:%02x:%02x:%02x\n",
                eth->ether_shost[0], eth->ether_shost[1], eth->ether_shost[2],
@@ -72,8 +72,8 @@ void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *pa
 
         int ip_header_len = ip->ip_hl * 4;
         int tcp_header_len = tcp->th_off * 4;
-        const u_char *payload = packet + sizeof(struct ether_header) + ip_header_len + tcp_header_len;
-        int payload_len = header->caplen - (sizeof(struct ether_header) + ip_header_len + tcp_header_len);
+        const u_char *payload = packet + sizeof(struct ethheader) + ip_header_len + tcp_header_len;
+        int payload_len = header->caplen - (sizeof(struct ethheader) + ip_header_len + tcp_header_len);
 
         printf("Message: ");
         for (int i = 0; i < payload_len && i < 32; i++) {
